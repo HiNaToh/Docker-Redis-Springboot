@@ -16,6 +16,7 @@ public class SpringBootRedisApplication {
 
 	@Bean
     public Docket swagger() {
+        // You could have get a /api/hachages to list all resources...
         return new Docket(DocumentationType.SWAGGER_2)
                 .select()
                 .apis(RequestHandlerSelectors.any())

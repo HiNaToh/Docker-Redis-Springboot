@@ -36,8 +36,22 @@ public class HachageServiceImpl implements HachageService {
 	public Hachage save(Hachage hach) {
 		MessageDigest digest;
 		try {
+		    // The previous code did not return a correct sha-256 !
+			// I'm not a java expert but I think the bug was that
+			// the `digest method of the MessageDigest class returns a byte array, which cannot be converted to a string using the toString method.
 			digest = MessageDigest.getInstance("SHA-256");
-			hach.setHacheSha(digest.digest(hach.getAHacher().getBytes(StandardCharsets.UTF_8)).toString());
+			byte[] hash = digest.digest(hach.getAHacher().getBytes(StandardCharsets.UTF_8));
+
+			StringBuilder hexString = new StringBuilder();
+			for (int i = 0; i < hash.length; i++) {
+				String hex = Integer.toHexString(0xff & hash[i]);
+				if (hex.length() == 1) {
+					hexString.append('0');
+				}
+				hexString.append(hex);
+			}
+
+			hach.setHacheSha(hexString.toString());
 		} catch (NoSuchAlgorithmException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
